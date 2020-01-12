@@ -15,8 +15,9 @@ enum _Element {
 }
 
 final _lightTheme = {
-  _Element.background: Colors.yellow,
-  _Element.text: Colors.white,
+  // _Element.background: Colors.yellow[600],
+  _Element.background: Color(0xFFB1DFDC),
+  _Element.text: Colors.black,
   _Element.shadow: Colors.black,
 };
 
@@ -99,28 +100,18 @@ class _DigitalClockState extends State<DigitalClock> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).brightness == Brightness.light
-        ? _lightTheme
-        : _darkTheme;
+    final bool isLightMode = Theme.of(context).brightness == Brightness.light;
+    final colors = isLightMode ? _lightTheme : _darkTheme;
     final hour =
         DateFormat(widget.model.is24HourFormat ? 'HH' : 'hh').format(_dateTime);
     final minute = DateFormat('mm').format(_dateTime);
     final dayString = DateFormat('EEE, MMM d').format(_dateTime);
     final fontSize = MediaQuery.of(context).size.width / 3;
-    // final offset = -fontSize / 7;
     final defaultStyle = TextStyle(
         color: colors[_Element.text],
-        fontFamily: 'Rajdhani',
+        fontFamily: 'Poppins',
         fontSize: fontSize,
-        height: 1.0
-        // shadows: [
-        //   Shadow(
-        //     blurRadius: 0,
-        //     color: colors[_Element.shadow],
-        //     offset: Offset(5, 0),
-        //   ),
-        // ],
-        );
+        height: 1.0);
 
     return Container(
       color: colors[_Element.background],
@@ -173,16 +164,36 @@ class _DigitalClockState extends State<DigitalClock> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 10.0),
                         child: Container(
-                            // height: 240,
-                            decoration: BoxDecoration(color: Colors.black),
-                            child: Text(hour)),
+                            height: 200,
+                            decoration: BoxDecoration(
+                                border: isLightMode
+                                    ? null
+                                    : Border.all(color: Color(0xFFB1DFDC)),
+                                color:
+                                    isLightMode ? Colors.white : Colors.black),
+                            child: Text(hour,
+                                style: TextStyle(
+                                    color: isLightMode
+                                        ? Colors.black
+                                        : Colors.white))),
                       ),
                       Container(
-                          // height: 240,
-                          decoration: BoxDecoration(color: Colors.black),
-                          child: Text(minute)),
+                          height: 200,
+                          decoration: BoxDecoration(
+                              border: isLightMode
+                                  ? null
+                                  : Border.all(color: Color(0xFFB1DFDC)),
+                              color: isLightMode ? Colors.white : Colors.black),
+                          child: Text(
+                            minute,
+                            style: TextStyle(
+                                color: isLightMode
+                                    ? Colors.black
+                                    : Color(0xFFB1DFDC)),
+                          )),
                     ],
                   ),
                   Row(
@@ -195,14 +206,7 @@ class _DigitalClockState extends State<DigitalClock> {
                   ),
                 ],
               ),
-            )
-            // child: Stack(
-            //   children: <Widget>[
-            //     Positioned(left: offset, top: 0, child: Text(hour)),
-            //     Positioned(right: offset, bottom: offset, child: Text(minute)),
-            //   ],
-            // ),
-            ),
+            )),
       ),
     );
   }
