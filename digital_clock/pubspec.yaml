@@ -22,3 +22,9 @@ flutter:
     - family: PressStart2P
       fonts:
         - asset: third_party/PressStart2P-Regular.ttf
+    - family: VarelaRound
+      fonts:
+        - asset: google_fonts/Varela_Round/VarelaRound-Regular.ttf
+    - family: Oswald
+      fonts:
+        - asset: google_fonts/Oswald/Oswald-VariableFont:wght.ttf

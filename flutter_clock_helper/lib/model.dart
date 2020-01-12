@@ -94,7 +94,7 @@ class ClockModel extends ChangeNotifier {
 
   /// Temperature with unit of measurement.
   String get temperatureString {
-    return '${temperature.toStringAsFixed(1)}$unitString';
+    return '${temperature.toStringAsFixed(0)}$unitString';
   }
 
   /// Temperature high with unit of measurement.
