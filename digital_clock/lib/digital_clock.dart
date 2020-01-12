@@ -116,10 +116,12 @@ class _DigitalClockState extends State<DigitalClock> {
 
     return Stack(
       children: <Widget>[
-        Positioned.fill(child: AnimatedBackground()),
+        isLightMode
+            ? Positioned.fill(child: AnimatedBackground())
+            : SizedBox.shrink(),
         // Positioned.fill(child: Particles(5)),
         Container(
-          // color: colors[_Element.background],
+          color: isLightMode ? null : colors[_Element.background],
           child: Center(
             child: DefaultTextStyle(
                 style: defaultStyle,
