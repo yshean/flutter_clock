@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:digital_clock/particle_background.dart';
 
 enum _Element {
   background,
@@ -113,101 +114,122 @@ class _DigitalClockState extends State<DigitalClock> {
         fontSize: fontSize,
         height: 1.0);
 
-    return Container(
-      color: colors[_Element.background],
-      child: Center(
-        child: DefaultTextStyle(
-            style: defaultStyle,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(
+    return Stack(
+      children: <Widget>[
+        Positioned.fill(child: AnimatedBackground()),
+        // Positioned.fill(child: Particles(5)),
+        Container(
+          // color: colors[_Element.background],
+          child: Center(
+            child: DefaultTextStyle(
+                style: defaultStyle,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 8.0),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Icon(
-                              // TODO: Handle extra conditions
-                              widget.model.weatherCondition ==
-                                      WeatherCondition.sunny
-                                  ? Icons.wb_sunny
-                                  : Icons.wb_cloudy,
-                              size: 40,
-                              color: defaultStyle.color,
-                            ),
+                          Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: Icon(
+                                  // TODO: Handle extra conditions
+                                  widget.model.weatherCondition ==
+                                          WeatherCondition.sunny
+                                      ? Icons.wb_sunny
+                                      : Icons.wb_cloudy,
+                                  size: 40,
+                                  color: defaultStyle.color,
+                                ),
+                              ),
+                              Text(_temperature,
+                                  style: TextStyle(
+                                      fontSize: 30, color: defaultStyle.color)),
+                            ],
                           ),
-                          Text(_temperature,
-                              style: TextStyle(
-                                  fontSize: 30, color: defaultStyle.color)),
+                          // Row(
+                          //   children: <Widget>[
+                          //     Padding(
+                          //       padding: const EdgeInsets.only(right: 8.0),
+                          //       child: Icon(Icons.location_on,
+                          //           size: 40, color: defaultStyle.color),
+                          //     ),
+                          //     Text(_location,
+                          //         style: TextStyle(
+                          //             fontSize: 30, color: defaultStyle.color))
+                          //   ],
+                          // )
                         ],
                       ),
-                      // Row(
-                      //   children: <Widget>[
-                      //     Padding(
-                      //       padding: const EdgeInsets.only(right: 8.0),
-                      //       child: Icon(Icons.location_on,
-                      //           size: 40, color: defaultStyle.color),
-                      //     ),
-                      //     Text(_location,
-                      //         style: TextStyle(
-                      //             fontSize: 30, color: defaultStyle.color))
-                      //   ],
-                      // )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 10.0),
-                        child: Container(
-                            height: 200,
-                            decoration: BoxDecoration(
-                                border: isLightMode
-                                    ? null
-                                    : Border.all(color: Color(0xFFB1DFDC)),
-                                color:
-                                    isLightMode ? Colors.white : Colors.black),
-                            child: Text(hour,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 10.0),
+                            child: Container(
+                                height: 200,
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black12,
+                                          offset: Offset(-3, 3))
+                                    ],
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    border: isLightMode
+                                        ? null
+                                        : Border.all(color: Color(0xFFB1DFDC)),
+                                    color: isLightMode
+                                        ? Colors.white
+                                        : Colors.black),
+                                child: Text(hour,
+                                    style: TextStyle(
+                                        color: isLightMode
+                                            ? Colors.black
+                                            : Colors.white))),
+                          ),
+                          Container(
+                              height: 200,
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black12,
+                                        offset: Offset(-3, 3))
+                                  ],
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  border: isLightMode
+                                      ? null
+                                      : Border.all(color: Color(0xFFB1DFDC)),
+                                  color: isLightMode
+                                      ? Colors.white
+                                      : Colors.black),
+                              child: Text(
+                                minute,
                                 style: TextStyle(
                                     color: isLightMode
                                         ? Colors.black
-                                        : Colors.white))),
+                                        : Color(0xFFB1DFDC)),
+                              )),
+                        ],
                       ),
-                      Container(
-                          height: 200,
-                          decoration: BoxDecoration(
-                              border: isLightMode
-                                  ? null
-                                  : Border.all(color: Color(0xFFB1DFDC)),
-                              color: isLightMode ? Colors.white : Colors.black),
-                          child: Text(
-                            minute,
-                            style: TextStyle(
-                                color: isLightMode
-                                    ? Colors.black
-                                    : Color(0xFFB1DFDC)),
-                          )),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(dayString,
+                              style: TextStyle(
+                                  color: defaultStyle.color, fontSize: 33))
+                        ],
+                      ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(dayString,
-                          style: TextStyle(
-                              color: defaultStyle.color, fontSize: 33))
-                    ],
-                  ),
-                ],
-              ),
-            )),
-      ),
+                )),
+          ),
+        ),
+      ],
     );
   }
 }
