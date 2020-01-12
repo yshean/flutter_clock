@@ -15,7 +15,7 @@ enum _Element {
 }
 
 final _lightTheme = {
-  _Element.background: Color(0xFF81B3FE),
+  _Element.background: Colors.yellow,
   _Element.text: Colors.white,
   _Element.shadow: Colors.black,
 };
@@ -100,26 +100,27 @@ class _DigitalClockState extends State<DigitalClock> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).brightness == Brightness.light
-        ? _darkTheme
+        ? _lightTheme
         : _darkTheme;
     final hour =
         DateFormat(widget.model.is24HourFormat ? 'HH' : 'hh').format(_dateTime);
     final minute = DateFormat('mm').format(_dateTime);
-    final dayString = DateFormat('EEE, MMM d y').format(_dateTime);
-    final fontSize = MediaQuery.of(context).size.width / 3.5;
+    final dayString = DateFormat('EEE, MMM d').format(_dateTime);
+    final fontSize = MediaQuery.of(context).size.width / 3;
     // final offset = -fontSize / 7;
     final defaultStyle = TextStyle(
-      color: colors[_Element.text],
-      fontFamily: 'Oswald',
-      fontSize: fontSize,
-      // shadows: [
-      //   Shadow(
-      //     blurRadius: 0,
-      //     color: colors[_Element.shadow],
-      //     offset: Offset(5, 0),
-      //   ),
-      // ],
-    );
+        color: colors[_Element.text],
+        fontFamily: 'Rajdhani',
+        fontSize: fontSize,
+        height: 1.0
+        // shadows: [
+        //   Shadow(
+        //     blurRadius: 0,
+        //     color: colors[_Element.shadow],
+        //     offset: Offset(5, 0),
+        //   ),
+        // ],
+        );
 
     return Container(
       color: colors[_Element.background],
@@ -127,12 +128,13 @@ class _DigitalClockState extends State<DigitalClock> {
         child: DefaultTextStyle(
             style: defaultStyle,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Row(
                         children: <Widget>[
@@ -153,28 +155,34 @@ class _DigitalClockState extends State<DigitalClock> {
                                   fontSize: 30, color: defaultStyle.color)),
                         ],
                       ),
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Icon(Icons.location_on,
-                                size: 40, color: defaultStyle.color),
-                          ),
-                          Text(_location,
-                              style: TextStyle(
-                                  fontSize: 30, color: defaultStyle.color))
-                        ],
-                      )
+                      // Row(
+                      //   children: <Widget>[
+                      //     Padding(
+                      //       padding: const EdgeInsets.only(right: 8.0),
+                      //       child: Icon(Icons.location_on,
+                      //           size: 40, color: defaultStyle.color),
+                      //     ),
+                      //     Text(_location,
+                      //         style: TextStyle(
+                      //             fontSize: 30, color: defaultStyle.color))
+                      //   ],
+                      // )
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(hour),
-                      Text(
-                        minute,
-                        style: TextStyle(color: Colors.orange),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Container(
+                            // height: 240,
+                            decoration: BoxDecoration(color: Colors.black),
+                            child: Text(hour)),
                       ),
+                      Container(
+                          // height: 240,
+                          decoration: BoxDecoration(color: Colors.black),
+                          child: Text(minute)),
                     ],
                   ),
                   Row(

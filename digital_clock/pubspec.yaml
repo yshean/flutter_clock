@@ -28,3 +28,15 @@ flutter:
     - family: Oswald
       fonts:
         - asset: google_fonts/Oswald/Oswald-VariableFont:wght.ttf
+    - family: PermanentMarker
+      fonts:
+        - asset: google_fonts/Permanent_Marker/PermanentMarker-Regular.ttf
+    - family: CreteRound
+      fonts:
+        - asset: google_fonts/Crete_Round/CreteRound-Regular.ttf
+    - family: Rajdhani
+      fonts:
+        - asset: google_fonts/Rajdhani/Rajdhani-Bold.ttf
+    - family: Poppins
+      fonts:
+        - asset: google_fonts/Poppins/Poppins-Bold.ttf
