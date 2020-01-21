@@ -13,7 +13,7 @@ class TimeBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height - 150,
+      height: MediaQuery.of(context).size.height / 2,
       width: MediaQuery.of(context).size.width / 2.8,
       decoration: BoxDecoration(
         boxShadow: colors[UiElement.shadow] == null
