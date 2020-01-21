@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:digital_clock/digital_clock.dart';
 
+enum ValueType { hour, minute }
+
 class TimeBox extends StatelessWidget {
   final Map<UiElement, Color> colors;
-  final String hourOrMin;
+  final ValueType valueType;
+  final String value;
 
-  TimeBox(this.colors, this.hourOrMin);
+  TimeBox(this.colors, this.valueType, this.value);
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +30,13 @@ class TimeBox extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          hourOrMin,
+          value,
           style: TextStyle(
             fontWeight: FontWeight.normal,
             color: colors[UiElement.text],
           ),
           textAlign: TextAlign.center,
+          semanticsLabel: '$value $valueType',
         ),
       ),
     );

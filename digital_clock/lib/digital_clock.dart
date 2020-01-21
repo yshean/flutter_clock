@@ -160,9 +160,12 @@ class _DigitalClockState extends State<DigitalClock> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      BoxedIcon(
-                        _getWeatherIcon(),
-                        size: weatherIconSize,
+                      Semantics(
+                        child: BoxedIcon(
+                          _getWeatherIcon(),
+                          size: weatherIconSize,
+                        ),
+                        value: widget.model.weatherString,
                       ),
                       Text(
                         _temperature,
@@ -175,9 +178,9 @@ class _DigitalClockState extends State<DigitalClock> {
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.all(10.0),
-                        child: TimeBox(colors, hour),
+                        child: TimeBox(colors, ValueType.hour, hour),
                       ),
-                      TimeBox(colors, minute)
+                      TimeBox(colors, ValueType.minute, minute)
                     ],
                   ),
                   Row(
