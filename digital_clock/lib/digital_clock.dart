@@ -1,35 +1,37 @@
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
+// Use of weather_icons is governed by the MIT license that can be
+// found in the weather_icons.LICENSE file.
 
 import 'dart:async';
 
+import 'package:digital_clock/time_box.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:digital_clock/animated_background.dart';
+import 'package:weather_icons/weather_icons.dart';
 
-enum _Element {
-  background,
-  text,
-  shadow,
-}
+enum UiElement { background, text, shadow, border, boxColor }
 
 final _lightTheme = {
-  _Element.background: Color(0xFFB1DFDC),
-  _Element.text: Colors.black,
-  _Element.shadow: Colors.black,
+  UiElement.background: null,
+  UiElement.text: Colors.black,
+  UiElement.shadow: Colors.black12,
+  UiElement.border: null,
+  UiElement.boxColor: Colors.white
 };
 
 final _darkTheme = {
-  _Element.background: Colors.black,
-  _Element.text: Colors.white,
-  _Element.shadow: Color(0xFF174EA6),
+  UiElement.background: Colors.black,
+  UiElement.text: Colors.white,
+  UiElement.shadow: null,
+  UiElement.border: Color(0xFFB1DFDC),
+  UiElement.boxColor: Colors.black
 };
 
-/// A basic digital clock.
-///
-/// You can do better than this!
 class DigitalClock extends StatefulWidget {
   const DigitalClock(this.model);
 
@@ -40,7 +42,7 @@ class DigitalClock extends StatefulWidget {
 }
 
 class _DigitalClockState extends State<DigitalClock> {
-  var _temperature = '';
+  String _temperature = '';
   DateTime _dateTime = DateTime.now();
   Timer _timer;
 
@@ -89,20 +91,57 @@ class _DigitalClockState extends State<DigitalClock> {
     });
   }
 
+  IconData _getWeatherIcon() {
+    switch (widget.model.weatherCondition) {
+      case WeatherCondition.cloudy:
+        return WeatherIcons.cloudy;
+        break;
+      case WeatherCondition.foggy:
+        return WeatherIcons.fog;
+        break;
+      case WeatherCondition.rainy:
+        return WeatherIcons.rain;
+        break;
+      case WeatherCondition.snowy:
+        return WeatherIcons.snow;
+        break;
+      case WeatherCondition.sunny:
+        // not sure how to get the sunset time
+        // so it will always show the sun when it is sunny
+        return WeatherIcons.day_sunny;
+        break;
+      case WeatherCondition.thunderstorm:
+        return WeatherIcons.thunderstorm;
+        break;
+      case WeatherCondition.windy:
+        return WeatherIcons.wind;
+        break;
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bool isLightMode = Theme.of(context).brightness == Brightness.light;
-    final colors = isLightMode ? _lightTheme : _darkTheme;
-    final hour =
+    final String hour =
         DateFormat(widget.model.is24HourFormat ? 'HH' : 'hh').format(_dateTime);
-    final minute = DateFormat('mm').format(_dateTime);
-    final dayString = DateFormat('EEE, MMM d').format(_dateTime);
-    final fontSize = MediaQuery.of(context).size.width / 4;
-    final defaultStyle = TextStyle(
-        color: colors[_Element.text],
+    final String minute = DateFormat('mm').format(_dateTime);
+    final String dayString = DateFormat('EEE, MMM d yyyy').format(_dateTime);
+
+    final bool isLightMode = Theme.of(context).brightness == Brightness.light;
+    final Map<UiElement, Color> colors = isLightMode ? _lightTheme : _darkTheme;
+
+    final double defaultFontSize = MediaQuery.of(context).size.width / 4;
+    final double weatherIconSize = defaultFontSize / 5;
+    final TextStyle defaultStyle = TextStyle(
+        color: colors[UiElement.text],
         fontFamily: 'Poppins',
-        fontSize: fontSize,
+        fontSize: defaultFontSize,
         height: 1.28);
+    final TextStyle temperatureStyle =
+        defaultStyle.copyWith(fontSize: defaultFontSize / 5);
+    final TextStyle dayStringStyle =
+        defaultStyle.copyWith(fontSize: defaultFontSize / 4.5);
 
     return Stack(
       children: <Widget>[
@@ -110,7 +149,7 @@ class _DigitalClockState extends State<DigitalClock> {
             ? Positioned.fill(child: AnimatedBackground())
             : SizedBox.shrink(),
         Container(
-          color: isLightMode ? null : colors[_Element.background],
+          color: colors[UiElement.background],
           child: Center(
             child: DefaultTextStyle(
               style: defaultStyle,
@@ -118,20 +157,16 @@ class _DigitalClockState extends State<DigitalClock> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Icon(
-                        // TODO: Handle extra conditions
-                        widget.model.weatherCondition == WeatherCondition.sunny
-                            ? Icons.wb_sunny
-                            : Icons.wb_cloudy,
-                        size: 40,
-                        color: defaultStyle.color,
+                      BoxedIcon(
+                        _getWeatherIcon(),
+                        size: weatherIconSize,
                       ),
                       Text(
                         _temperature,
-                        style:
-                            TextStyle(fontSize: 30, color: defaultStyle.color),
+                        style: temperatureStyle,
                       ),
                     ],
                   ),
@@ -140,52 +175,9 @@ class _DigitalClockState extends State<DigitalClock> {
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.all(10.0),
-                        child: Container(
-                          height: MediaQuery.of(context).size.height - 150,
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black12,
-                                    offset: Offset(-3, 3))
-                              ],
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: isLightMode
-                                  ? null
-                                  : Border.all(color: Color(0xFFB1DFDC)),
-                              color: isLightMode ? Colors.white : Colors.black),
-                          child: Center(
-                            child: Text(
-                              hour,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  color: isLightMode
-                                      ? Colors.black
-                                      : Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
+                        child: TimeBox(colors, hour),
                       ),
-                      Container(
-                        height: MediaQuery.of(context).size.height - 150,
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black12, offset: Offset(-3, 3))
-                            ],
-                            borderRadius: BorderRadius.circular(10.0),
-                            border: isLightMode
-                                ? null
-                                : Border.all(color: Color(0xFFB1DFDC)),
-                            color: isLightMode ? Colors.white : Colors.black),
-                        child: Text(
-                          minute,
-                          style: TextStyle(
-                              color: isLightMode
-                                  ? Colors.black
-                                  : Color(0xFFB1DFDC)),
-                        ),
-                      ),
+                      TimeBox(colors, minute)
                     ],
                   ),
                   Row(
@@ -193,8 +185,7 @@ class _DigitalClockState extends State<DigitalClock> {
                     children: <Widget>[
                       Text(
                         dayString,
-                        style:
-                            TextStyle(color: defaultStyle.color, fontSize: 33),
+                        style: dayStringStyle,
                       )
                     ],
                   ),

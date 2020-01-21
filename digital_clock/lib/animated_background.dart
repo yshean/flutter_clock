@@ -1,3 +1,6 @@
+// Use of simple_animations is governed by the MIT license that can be
+// found in the simple_animations.LICENSE file.
+
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
 
